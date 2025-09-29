@@ -1,0 +1,47 @@
+# ICS Cybersecurity Framework Dependencies
+# Phase 1: Threat Identification and Data Collection
+scapy>=2.5.0                    # Packet capture and analysis
+pyshark>=0.6.0                  # Wireshark Python wrapper
+elasticsearch>=8.10.0           # ELK Stack integration
+splunk-sdk>=1.7.0               # Splunk integration
+requests>=2.31.0                # API requests for threat feeds
+
+# Phase 2: Graph-Theoretic Representation
+networkx>=3.2.1                 # Graph algorithms and analysis
+neo4j>=5.13.0                   # Graph database
+igraph>=0.10.8                  # Additional graph algorithms
+matplotlib>=3.7.2               # Graph visualization
+plotly>=5.17.0                  # Interactive visualizations
+
+# Phase 3: Risk Scoring and ML Classification
+scikit-learn>=1.3.0             # Machine learning algorithms
+xgboost>=1.7.6                  # Gradient boosting
+pandas>=2.1.1                   # Data manipulation
+numpy>=1.24.3                   # Numerical computing
+scipy>=1.11.3                   # Scientific computing
+
+# Phase 4: Dynamic Threat Mitigation
+gymnasium>=0.29.1               # Reinforcement learning environment
+torch>=2.1.0                    # PyTorch for deep learning
+tensorflow>=2.13.0              # TensorFlow alternative
+stable-baselines3>=2.1.0        # RL algorithms
+
+# Phase 5: Dashboard and API Development
+fastapi>=0.104.1                # Modern API framework
+uvicorn>=0.24.0                 # ASGI server
+websockets>=12.0                # Real-time updates
+jinja2>=3.1.2                   # Template engine
+python-multipart>=0.0.6        # File uploads
+
+# Phase 6: Model Validation and Testing
+pytest>=7.4.3                   # Testing framework
+pytest-asyncio>=0.21.1         # Async testing
+locust>=2.17.0                  # Load testing
+coverage>=7.3.2                 # Code coverage
+
+# Additional utilities
+python-dotenv>=1.0.0            # Environment variables
+pydantic>=2.4.2                 # Data validation
+loguru>=0.7.2                   # Enhanced logging
+redis>=5.0.1                    # Caching and pub/sub
+celery>=5.3.4                   # Task queue for background processing

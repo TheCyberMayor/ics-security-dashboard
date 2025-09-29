@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ICS Security Risk Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <!-- vis-network CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/styles/vis-network.min.css">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="login-script.js"></script>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><i class="fa-solid fa-shield"></i> ICS Risk</div>
+      <div class="user-info" id="userInfo" style="display: none;">
+        <div class="user-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-details">
+          <div class="user-name" id="userName">User Name</div>
+          <div class="user-role" id="userRole">Role</div>
+        </div>
+        <button class="logout-btn" id="logoutBtn" title="Logout">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+      <div class="filters">
+        <h3>Filters</h3>
+        <label>
+          Time range
+          <select id="timeRange">
+            <option value="1h">Last 1 hour</option>
+            <option value="6h" selected>Last 6 hours</option>
+            <option value="24h">Last 24 hours</option>
+            <option value="7d">Last 7 days</option>
+          </select>
+        </label>
+        <label>
+          Severity
+          <select id="severity">
+            <option value="all" selected>All</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+        </label>
+        <label>
+          Zone
+          <select id="zone">
+            <option value="all" selected>All</option>
+            <option value="IT">IT</option>
+            <option value="DMZ">DMZ</option>
+            <option value="OT">OT</option>
+            <option value="PLC">PLC</option>
+          </select>
+        </label>
+        <button id="applyFilters" class="btn">Apply</button>
+      </div>
+
+      <div class="alerts-panel">
+        <h3>Alerts</h3>
+        <div class="alert-actions">
+          <button class="btn small" id="ackSelected"><i class="fa-regular fa-circle-check"></i> Ack</button>
+          <button class="btn small" id="suppressSelected"><i class="fa-solid fa-bell-slash"></i> Suppress</button>
+          <button class="btn small" id="exportAlerts"><i class="fa-solid fa-file-export"></i> Export</button>
+        </div>
+        <div id="alertsList" class="alerts-list"></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">Overall Risk</div>
+            <div class="stat-value" id="overallRisk">72</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Systems Healthy</div>
+            <div class="stat-value" id="systemsHealthy">18/22</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Open Alerts</div>
+            <div class="stat-value" id="openAlerts">12</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">MTTD</div>
+            <div class="stat-value" id="mttd">4.2m</div>
+          </div>
+        </div>
+        <div class="legend">
+          <span class="pill green">Low</span>
+          <span class="pill yellow">Medium</span>
+          <span class="pill orange">High</span>
+          <span class="pill red">Critical</span>
+        </div>
+      </header>
+
+      <section class="grid">
+        <div class="card col-2 row-2">
+          <div class="card-header">
+            <h3>Network Topology</h3>
+            <div class="card-actions">
+              <button class="icon-btn" id="fitGraph" title="Fit to view"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
+              <button class="icon-btn" id="toggleLayout" title="Toggle layout"><i class="fa-solid fa-diagram-project"></i></button>
+            </div>
+          </div>
+          <div id="topology" class="card-body"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>Real-time Risk Score</h3></div>
+          <div class="card-body"><canvas id="riskTimeline"></canvas></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>Attack Distribution</h3></div>
+          <div class="card-body"><canvas id="attackPie"></canvas></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>System Health</h3></div>
+          <div class="card-body" id="systemHealth">
+            <div class="health-item"><span class="dot green"></span> PLCs <span class="health-val" id="health-plc">OK</span></div>
+            <div class="health-item"><span class="dot yellow"></span> SCADA <span class="health-val" id="health-scada">Degraded</span></div>
+            <div class="health-item"><span class="dot green"></span> Historian <span class="health-val" id="health-historian">OK</span></div>
+            <div class="health-item"><span class="dot orange"></span> DMZ <span class="health-val" id="health-dmz">High Load</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>Alert Management</h3></div>
+          <div class="card-body" id="alertDetails">
+            <div class="placeholder">Select an alert to view details</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Libraries via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/date-fns@2"></script>
+  <!-- Time scale adapter for Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/dist/vis-network.min.js"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>

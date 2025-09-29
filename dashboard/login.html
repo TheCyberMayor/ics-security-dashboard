@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ICS Security Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="login-styles.css" />
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="logo">
+          <i class="fa-solid fa-shield-halved"></i>
+          <h1>ICS Security</h1>
+        </div>
+        <p>Industrial Control System Risk Management Platform</p>
+      </div>
+      
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label for="username">
+            <i class="fa-solid fa-user"></i>
+            Username
+          </label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            required 
+            autocomplete="username"
+            placeholder="Enter your username"
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="password">
+            <i class="fa-solid fa-lock"></i>
+            Password
+          </label>
+          <div class="password-input">
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              required 
+              autocomplete="current-password"
+              placeholder="Enter your password"
+            />
+            <button type="button" id="togglePassword" class="password-toggle">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="role">
+            <i class="fa-solid fa-user-tag"></i>
+            Role
+          </label>
+          <select id="role" name="role" required>
+            <option value="">Select your role</option>
+            <option value="admin">System Administrator</option>
+            <option value="operator">Control Room Operator</option>
+            <option value="engineer">Security Engineer</option>
+            <option value="viewer">Read-Only Viewer</option>
+          </select>
+        </div>
+        
+        <div class="form-options">
+          <label class="checkbox-label">
+            <input type="checkbox" id="rememberMe" name="rememberMe">
+            <span class="checkmark"></span>
+            Remember me for 24 hours
+          </label>
+        </div>
+        
+        <button type="submit" class="login-btn" id="loginBtn">
+          <i class="fa-solid fa-sign-in-alt"></i>
+          Sign In
+        </button>
+      </form>
+      
+      <div class="login-footer">
+        <div class="demo-credentials">
+          <h4><i class="fa-solid fa-info-circle"></i> Demo Credentials</h4>
+          <div class="credentials-grid">
+            <div class="credential-item">
+              <strong>Admin:</strong> admin / admin123
+            </div>
+            <div class="credential-item">
+              <strong>Operator:</strong> operator / op123
+            </div>
+            <div class="credential-item">
+              <strong>Engineer:</strong> engineer / eng123
+            </div>
+            <div class="credential-item">
+              <strong>Viewer:</strong> viewer / view123
+            </div>
+          </div>
+        </div>
+        
+        <div class="security-notice">
+          <i class="fa-solid fa-exclamation-triangle"></i>
+          <p>This system is for authorized personnel only. All activities are logged and monitored in accordance with industrial cybersecurity policies.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+      <div class="loading-spinner">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <p>Authenticating...</p>
+      </div>
+    </div>
+    
+    <!-- Alert Messages -->
+    <div id="alertContainer" class="alert-container"></div>
+  </div>
+  
+  <script src="login-script.js"></script>
+</body>
+</html>
