@@ -1,0 +1,22 @@
+name: ics-security-dashboard
+services:
+- name: web
+  source_dir: /
+  github:
+    repo: your-username/ics-security-dashboard
+    branch: main
+  run_command: echo "Static site served"
+  environment_slug: html
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  routes:
+  - path: /
+  static_sites:
+  - name: dashboard
+    source_dir: /dashboard
+    index_document: login.html
+    error_document: login.html
+    routes:
+    - path: /
+    build_command: echo "Building static dashboard"
+    output_dir: /dashboard
