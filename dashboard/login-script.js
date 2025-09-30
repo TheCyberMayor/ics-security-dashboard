@@ -79,23 +79,16 @@ class LoginManager {
             item.title = 'Click to auto-fill credentials';
             
             item.addEventListener('click', () => {
-                const text = item.textContent;
-                const usernameMatch = text.match(/Username:\s*(\w+)/);
-                const passwordMatch = text.match(/Password:\s*(\w+)/);
+                const username = item.dataset.username;
+                const password = item.dataset.password;
+                const role = item.dataset.role;
                 
-                if (usernameMatch && passwordMatch) {
-                    document.getElementById('username').value = usernameMatch[1];
-                    document.getElementById('password').value = passwordMatch[1];
+                if (username && password && role) {
+                    document.getElementById('username').value = username;
+                    document.getElementById('password').value = password;
+                    document.getElementById('role').value = role;
                     
-                    // Set role based on username
-                    const roleSelect = document.getElementById('role');
-                    const username = usernameMatch[1];
-                    const user = this.demoUsers[username];
-                    if (user && roleSelect) {
-                        roleSelect.value = user.role;
-                    }
-                    
-                    this.showAlert('Credentials auto-filled! Click Login to continue.', 'info');
+                    this.showAlert(`Credentials auto-filled for ${role}! Click Login to continue.`, 'info');
                 }
             });
         });
