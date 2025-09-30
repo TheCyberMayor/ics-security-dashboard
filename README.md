@@ -12,9 +12,9 @@ A comprehensive Industrial Control Systems (ICS) cybersecurity risk management d
 | Role | Username | Password | Access Level |
 |------|----------|----------|--------------|
 | Administrator | `admin` | `admin123` | Full system access |
-| Operator | `operator` | `op123` | Control room operations |
-| Engineer | `engineer` | `eng123` | System analysis & config |
-| Viewer | `viewer` | `view123` | Read-only monitoring |
+| Operator | `operator` | `operator123` | Control room operations |
+| Engineer | `engineer` | `engineer123` | System analysis & config |
+| Viewer | `viewer` | `viewer123` | Read-only monitoring |
 
 ## 🏗️ Architecture
 

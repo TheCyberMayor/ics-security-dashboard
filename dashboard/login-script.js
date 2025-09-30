@@ -16,20 +16,20 @@ class LoginManager {
                 displayName: 'System Administrator'
             },
             'operator': {
-                password: 'op123',
+                password: 'operator123',
                 role: 'Operator',
                 permissions: ['monitor_systems', 'basic_controls', 'incident_response'],
                 displayName: 'Control Room Operator'
             },
             'engineer': {
-                password: 'eng123',
+                password: 'engineer123',
                 role: 'Engineer',
                 permissions: ['system_analysis', 'configuration', 'diagnostics', 'reports'],
                 displayName: 'Systems Engineer'
             },
             'viewer': {
-                password: 'view123',
-                role: 'Viewer',
+                password: 'viewer123',
+                role: 'Read-Only Viewer',
                 permissions: ['read_only', 'basic_monitoring'],
                 displayName: 'Security Analyst'
             }
@@ -135,9 +135,6 @@ class LoginManager {
             case 'password':
                 if (!value) {
                     errorMessage = 'Password is required';
-                    isValid = false;
-                } else if (value.length < 6) {
-                    errorMessage = 'Password must be at least 6 characters';
                     isValid = false;
                 }
                 break;
@@ -255,6 +252,7 @@ class LoginManager {
         const user = this.demoUsers[username.toLowerCase()];
         
         if (!user) {
+            console.log('Authentication failed: User not found', { username: username.toLowerCase() });
             return {
                 success: false,
                 message: 'Invalid username or password.'
@@ -262,16 +260,24 @@ class LoginManager {
         }
         
         if (user.password !== password) {
+            console.log('Authentication failed: Wrong password');
             return {
                 success: false,
                 message: 'Invalid username or password.'
             };
         }
         
+        // Debug role matching
+        console.log('Role matching:', { 
+            userRole: user.role, 
+            selectedRole: selectedRole,
+            match: user.role === selectedRole 
+        });
+        
         if (user.role !== selectedRole) {
             return {
                 success: false,
-                message: `Role mismatch. This user is assigned as ${user.role}.`
+                message: `Role mismatch. Expected "${user.role}" but selected "${selectedRole}". Please click the credential box to auto-fill.`
             };
         }
         
