@@ -126,6 +126,41 @@ class DashboardAuth {
 // Initialize authentication
 const dashboardAuth = new DashboardAuth();
 
+// Dashboard stability management
+class DashboardStability {
+  constructor() {
+    this.intervals = new Set();
+    this.timeouts = new Set();
+    this.isStable = true;
+  }
+  
+  addInterval(intervalId) {
+    this.intervals.add(intervalId);
+  }
+  
+  addTimeout(timeoutId) {
+    this.timeouts.add(timeoutId);
+  }
+  
+  cleanup() {
+    console.log('🧹 Cleaning up dashboard intervals and timeouts...');
+    this.intervals.forEach(id => clearInterval(id));
+    this.timeouts.forEach(id => clearTimeout(id));
+    this.intervals.clear();
+    this.timeouts.clear();
+  }
+  
+  stabilize() {
+    if (!this.isStable) {
+      console.log('🔧 Stabilizing dashboard...');
+      this.cleanup();
+      this.isStable = true;
+    }
+  }
+}
+
+const dashboardStability = new DashboardStability();
+
 // Configuration
 const CONFIG = {
   API_BASE: window.location.hostname === 'localhost' && window.location.port === '8000' 
@@ -134,7 +169,7 @@ const CONFIG = {
   WS_URL: window.location.hostname === 'localhost' && window.location.port === '8000'
     ? 'ws://localhost:8000/ws'
     : `ws://${window.location.host}/ws`,
-  UPDATE_INTERVAL: 5000, // 5 seconds
+  UPDATE_INTERVAL: 15000, // Increased to 15 seconds to reduce blinking
   DEMO_MODE: true // Falls back to demo data if backend unavailable
 };
 
@@ -324,18 +359,20 @@ function initRiskTimeline() {
   });
 }
 
-// Add new point every 2s
+// Add new point every 10s (reduced frequency to prevent blinking)
+let riskFeedInterval = null;
 function startRiskFeed() {
-  setInterval(() => {
+  if (riskFeedInterval) clearInterval(riskFeedInterval);
+  riskFeedInterval = setInterval(() => {
     if (!riskChart) return;
     const ds = riskChart.data.datasets[0];
     const last = ds.data[ds.data.length - 1]?.y ?? 60;
-    const next = Math.max(0, Math.min(100, last + rand(-5, 6)));
+    const next = Math.max(0, Math.min(100, last + rand(-2, 3))); // Smaller changes
     ds.data.push({ x: new Date(), y: next });
     while (ds.data.length > 60) ds.data.shift();
     riskChart.update('none');
     el('overallRisk').textContent = Math.round(next);
-  }, 2000);
+  }, 10000); // Reduced from 2s to 10s
 }
 
 // Attack Distribution Pie
@@ -480,9 +517,11 @@ function applyFilters() {
 }
 
 // System Health: simple periodic changes
+let healthTickerInterval = null;
 function startHealthTicker() {
+  if (healthTickerInterval) clearInterval(healthTickerInterval);
   const statuses = ['OK', 'Degraded', 'High Load', 'Maintenance'];
-  setInterval(() => {
+  healthTickerInterval = setInterval(() => {
     const plc = statuses[rand(0, 1)];
     const scada = statuses[rand(0, 2)];
     const hist = statuses[rand(0, 1)];
@@ -491,7 +530,7 @@ function startHealthTicker() {
     el('health-scada').textContent = scada;
     el('health-historian').textContent = hist;
     el('health-dmz').textContent = dmz;
-  }, 8000);
+  }, 15000); // Increased from 8s to 15s
 }
 
 // Wire up UI
@@ -820,8 +859,10 @@ async function loadEnhancedData() {
 }
 
 // Periodic data refresh
+let dataRefreshInterval = null;
 function startDataRefresh() {
-  setInterval(async () => {
+  if (dataRefreshInterval) clearInterval(dataRefreshInterval);
+  dataRefreshInterval = setInterval(async () => {
     if (backendAvailable) {
       await loadEnhancedData();
     }
