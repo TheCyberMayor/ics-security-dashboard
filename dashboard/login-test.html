@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ICS Security Login - Simple Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+    .container { max-width: 400px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+    .form-group { margin: 10px 0; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+    button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .credentials { margin: 20px 0; padding: 10px; background: #e9f7ef; border-radius: 4px; }
+    .cred-box { margin: 5px 0; padding: 5px; background: #d4edda; border-radius: 3px; cursor: pointer; }
+    .cred-box:hover { background: #c3e6cb; }
+    .message { margin: 10px 0; padding: 10px; border-radius: 4px; }
+    .error { background: #f8d7da; color: #721c24; }
+    .success { background: #d4edda; color: #155724; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>ICS Security Login - Test Version</h2>
+    
+    <div class="credentials">
+      <h4>Click to Auto-Fill:</h4>
+      <div class="cred-box" onclick="fillCredentials('admin', 'admin123', 'Administrator')">
+        Admin: admin / admin123 / Administrator
+      </div>
+      <div class="cred-box" onclick="fillCredentials('operator', 'operator123', 'Operator')">
+        Operator: operator / operator123 / Operator
+      </div>
+      <div class="cred-box" onclick="fillCredentials('engineer', 'engineer123', 'Engineer')">
+        Engineer: engineer / engineer123 / Engineer
+      </div>
+      <div class="cred-box" onclick="fillCredentials('viewer', 'viewer123', 'Read-Only Viewer')">
+        Viewer: viewer / viewer123 / Read-Only Viewer  
+      </div>
+    </div>
+    
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="role">Role:</label>
+        <select id="role" required>
+          <option value="">Select Role</option>
+          <option value="Administrator">Administrator</option>
+          <option value="Operator">Operator</option>
+          <option value="Engineer">Engineer</option>
+          <option value="Read-Only Viewer">Read-Only Viewer</option>
+        </select>
+      </div>
+      
+      <button type="submit">Login</button>
+    </form>
+    
+    <div id="message"></div>
+  </div>
+
+  <script>
+    // Simple test credentials
+    const testUsers = {
+      'admin': { password: 'admin123', role: 'Administrator' },
+      'operator': { password: 'operator123', role: 'Operator' },
+      'engineer': { password: 'engineer123', role: 'Engineer' },
+      'viewer': { password: 'viewer123', role: 'Read-Only Viewer' }
+    };
+    
+    function fillCredentials(username, password, role) {
+      document.getElementById('username').value = username;
+      document.getElementById('password').value = password;
+      document.getElementById('role').value = role;
+      showMessage('Credentials filled! Click Login to test.', 'success');
+    }
+    
+    function showMessage(text, type) {
+      const messageDiv = document.getElementById('message');
+      messageDiv.textContent = text;
+      messageDiv.className = 'message ' + type;
+    }
+    
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const role = document.getElementById('role').value;
+      
+      console.log('Login attempt:', { username, password, role });
+      
+      const user = testUsers[username];
+      
+      if (!user) {
+        showMessage('Invalid username', 'error');
+        return;
+      }
+      
+      if (user.password !== password) {
+        showMessage('Invalid password', 'error');
+        return;
+      }
+      
+      if (user.role !== role) {
+        showMessage(`Role mismatch. Expected: ${user.role}, Selected: ${role}`, 'error');
+        return;
+      }
+      
+      showMessage('Login successful! Redirecting...', 'success');
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
